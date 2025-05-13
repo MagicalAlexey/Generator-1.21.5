@@ -112,6 +112,9 @@ public class ${name}Item extends ${data.toolType?replace("MultiTool", "")?replac
 				<#if data.enchantability != 0 && data.toolType=="Shears">
 				.enchantable(${data.enchantability})
 				</#if>
+				<#if data.stayInGridWhenCrafting && data.usageCount != 0>
+				.setNoCombineRepair()
+				</#if>
 		);
 	}
 
@@ -225,6 +228,9 @@ public class ${name}Item extends Item {
 			<#if data.enchantability != 0>
 			.enchantable(${data.enchantability})
 			</#if>
+			<#if data.stayInGridWhenCrafting && data.usageCount != 0>
+			.setNoCombineRepair()
+			</#if>
 		);
 	}
 
@@ -254,6 +260,9 @@ public class ${name}Item extends FishingRodItem {
 			.repairable(TagKey.create(Registries.ITEM, ResourceLocation.parse("${modid}:${registryname}_repair_items")))
 			<#if data.enchantability != 0>
 			.enchantable(${data.enchantability})
+			</#if>
+			<#if data.stayInGridWhenCrafting && data.usageCount != 0>
+			.setNoCombineRepair()
 			</#if>
 		);
 	}
@@ -295,20 +304,10 @@ public class ${name}Item extends FishingRodItem {
 				}
 				return retval;
 			}
-
-			@Override public boolean isCombineRepairable(ItemStack itemstack) {
-				return false;
-			}
 		<#else>
 			@Override public ItemStack getCraftingRemainder(ItemStack itemstack) {
 				return new ItemStack(this);
 			}
-
-			<#if data.usageCount != 0>
-			@Override public boolean isCombineRepairable(ItemStack itemstack) {
-				return false;
-			}
-			</#if>
 		</#if>
 	</#if>
 
