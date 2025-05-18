@@ -61,7 +61,8 @@ package ${package}.fluid.types;
 			<#else>
 			.sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)
 			</#if>
-			.sound(SoundActions.FLUID_VAPORIZE, SoundEvents.FIRE_EXTINGUISH));
+			.sound(SoundActions.FLUID_VAPORIZE, SoundEvents.FIRE_EXTINGUISH)
+		);
 	}
 
 	@SubscribeEvent public static void registerFluidTypeExtensions(RegisterClientExtensionsEvent event) {
@@ -160,6 +161,6 @@ package ${package}.fluid.types;
 					</#if> | 0xFF000000;
 				}
 				</#if>
-		}, ${JavaModName}FluidTypes.${data.getModElement().getRegistryNameUpper()}_TYPE.get());
+		}, ${JavaModName}FluidTypes.${REGISTRYNAME}_TYPE.get());
 	}
 }</#compress>
