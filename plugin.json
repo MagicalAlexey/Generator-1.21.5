@@ -1,12 +1,12 @@
 {
   "id": "neoforge-generator-1.21.5",
   "supportedversions": [
-    2025001
+    2025002
   ],
   "weight": 192,
   "info": {
     "name": "Minecraft NeoForge 1.21.5 Java Edition generator",
-    "version": "1.12",
+    "version": "2.0",
     "description": "Minecraft NeoForge 1.21.5 Java Edition/Datapack Generator",
     "author": "MagicalAlexey"
   }

@@ -113,6 +113,12 @@ package ${package}.client.renderer;
 <#compress>
 public class ${name}Renderer extends <#if humanoid>Humanoid</#if>MobRenderer<${name}Entity, ${renderState}, ${model}> {
 
+	<#-- This entity reference is shared for all entities as renderer only has one instance.
+	     This currently works, but is somewhat hacky. It works because all methods requiring it
+	     are called after extractRenderState where this entity is assigned to the current entity.
+	     On the other hand, vanilla code reuses state for all entities too, so it may be fine.
+	     If we need to change this, we can use RegisterRenderStateModifiersEvent and
+	     and IRenderStateExtension#setRenderData with custom ContextKey-->
 	private ${name}Entity entity = null;
 
 	public ${name}Renderer(EntityRendererProvider.Context context) {
@@ -121,6 +127,8 @@ public class ${name}Renderer extends <#if humanoid>Humanoid</#if>MobRenderer<${n
 		<#if humanoid>
 		this.addLayer(new HumanoidArmorLayer(this, new HumanoidModel(context.bakeLayer(ModelLayers.PLAYER_INNER_ARMOR)),
 						new HumanoidModel(context.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR)), context.getEquipmentRenderer()));
+		<#elseif data.mobModelName == "Villager" || data.mobModelName == "Witch">
+		this.addLayer(new CrossedArmsItemLayer<>(this));
 		</#if>
 
 		<#list data.modelLayers as layer>
@@ -167,13 +175,18 @@ public class ${name}Renderer extends <#if humanoid>Humanoid</#if>MobRenderer<${n
 			((AnimatedModel) this.model).setEntity(entity);
 		}
 		</#if>
+		<#if data.mobModelName == "Villager" || data.mobModelName == "Witch">
+		if (state instanceof HoldingEntityRenderState holdingState) {
+			this.itemModelResolver.updateForLiving(holdingState.heldItem, entity.getMainHandItem(), ItemDisplayContext.GROUND, false, entity);
+		}
+		</#if>
 	}
 
 	@Override public ResourceLocation getTextureLocation(${renderState} state) {
 		return ResourceLocation.parse("${modid}:textures/entities/${data.mobModelTexture}");
 	}
 
-	<#if data.mobModelName == "Villager" || (data.visualScale?? && (data.visualScale.getFixedValue() != 1 || hasProcedure(data.visualScale)))>
+	<#if data.mobModelName == "Villager" || data.breedable || (data.visualScale?? && (data.visualScale.getFixedValue() != 1 || hasProcedure(data.visualScale)))>
 	@Override protected void scale(${renderState} state, PoseStack poseStack) {
 		<#if hasProcedure(data.visualScale)>
 			Level world = entity.level();
@@ -187,6 +200,9 @@ public class ${name}Renderer extends <#if humanoid>Humanoid</#if>MobRenderer<${n
 		</#if>
 		<#if data.mobModelName == "Villager">
 			poseStack.scale(0.9375f, 0.9375f, 0.9375f);
+		</#if>
+		<#if data.breedable>
+			poseStack.scale(entity.getAgeScale(), entity.getAgeScale(), entity.getAgeScale());
 		</#if>
 	}
 	</#if>

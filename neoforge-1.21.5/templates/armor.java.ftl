@@ -2,29 +2,29 @@
  # MCreator (https://mcreator.net/)
  # Copyright (C) 2012-2020, Pylo
  # Copyright (C) 2020-2023, Pylo, opensource contributors
- #
+ # 
  # This program is free software: you can redistribute it and/or modify
  # it under the terms of the GNU General Public License as published by
  # the Free Software Foundation, either version 3 of the License, or
  # (at your option) any later version.
- #
+ # 
  # This program is distributed in the hope that it will be useful,
  # but WITHOUT ANY WARRANTY; without even the implied warranty of
  # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  # GNU General Public License for more details.
- #
+ # 
  # You should have received a copy of the GNU General Public License
  # along with this program.  If not, see <https://www.gnu.org/licenses/>.
- #
+ # 
  # Additional permission for code generator templates (*.ftl files)
- #
- # As a special exception, you may create a larger work that contains part or
- # all of the MCreator code generator templates (*.ftl files) and distribute
- # that work under terms of your choice, so long as that work isn't itself a
- # template for code generation. Alternatively, if you modify or redistribute
- # the template itself, you may (at your option) remove this special exception,
- # which will cause the template and the resulting code generator output files
- # to be licensed under the GNU General Public License without this special
+ # 
+ # As a special exception, you may create a larger work that contains part or 
+ # all of the MCreator code generator templates (*.ftl files) and distribute 
+ # that work under terms of your choice, so long as that work isn't itself a 
+ # template for code generation. Alternatively, if you modify or redistribute 
+ # the template itself, you may (at your option) remove this special exception, 
+ # which will cause the template and the resulting code generator output files 
+ # to be licensed under the GNU General Public License without this special 
  # exception.
 -->
 
@@ -66,7 +66,7 @@ import net.minecraft.client.model.Model;
 		<#if data.enableHelmet>
 		event.registerItem(new IClientItemExtensions() {
 			<#if data.helmetModelName != "Default" && data.getHelmetModel()??>
-			@Override public HumanoidModel getHumanoidArmorModel(ItemStack itemStack, EquipmentClientInfo.LayerType layerType, Model original) {
+			@Override @OnlyIn(Dist.CLIENT) public HumanoidModel getHumanoidArmorModel(ItemStack itemStack, EquipmentClientInfo.LayerType layerType, Model original) {
 				ModelPart head = new ${data.helmetModelName}(Minecraft.getInstance().getEntityModels().bakeLayer(${data.helmetModelName}.LAYER_LOCATION)).${data.helmetModelPart};
 				head.setInitialPose(PartPose.rotation(0, (float) (Math.PI), 0));
 				head.resetPose();
@@ -91,7 +91,7 @@ import net.minecraft.client.model.Model;
 				return ResourceLocation.parse("${modid}:textures/models/armor/${data.armorTextureFile}_layer_1.png");
 				</#if>
 			}
-		}, ${JavaModName}Items.${data.getModElement().getRegistryNameUpper()}_HELMET.get());
+		}, ${JavaModName}Items.${REGISTRYNAME}_HELMET.get());
 		</#if>
 
 		<#if data.enableBody>
@@ -118,7 +118,7 @@ import net.minecraft.client.model.Model;
 				return ResourceLocation.parse("${modid}:textures/models/armor/${data.armorTextureFile}_layer_1.png");
 				</#if>
 			}
-		}, ${JavaModName}Items.${data.getModElement().getRegistryNameUpper()}_CHESTPLATE.get());
+		}, ${JavaModName}Items.${REGISTRYNAME}_CHESTPLATE.get());
 		</#if>
 
 		<#if data.enableLeggings>
@@ -145,7 +145,7 @@ import net.minecraft.client.model.Model;
 				return ResourceLocation.parse("${modid}:textures/models/armor/${data.armorTextureFile}_layer_2.png");
 				</#if>
 			}
-		}, ${JavaModName}Items.${data.getModElement().getRegistryNameUpper()}_LEGGINGS.get());
+		}, ${JavaModName}Items.${REGISTRYNAME}_LEGGINGS.get());
 		</#if>
 
 		<#if data.enableBoots>
@@ -172,7 +172,7 @@ import net.minecraft.client.model.Model;
 				return ResourceLocation.parse("${modid}:textures/models/armor/${data.armorTextureFile}_layer_1.png");
 				</#if>
 			}
-		}, ${JavaModName}Items.${data.getModElement().getRegistryNameUpper()}_BOOTS.get());
+		}, ${JavaModName}Items.${REGISTRYNAME}_BOOTS.get());
 		</#if>
 	}
 
@@ -189,6 +189,8 @@ import net.minecraft.client.model.Model;
 
 		<@addSpecialInformation data.helmetSpecialInformation, "item." + modid + "." + registryname + "_helmet"/>
 
+		<@hasGlow data.helmetGlowCondition/>
+
 		<@piglinNeutral data.helmetPiglinNeutral/>
 
 		<@onArmorTick data.onHelmetTick/>
@@ -203,6 +205,8 @@ import net.minecraft.client.model.Model;
 		}
 
 		<@addSpecialInformation data.bodySpecialInformation, "item." + modid + "." + registryname + "_chestplate"/>
+
+		<@hasGlow data.bodyGlowCondition/>
 
 		<@piglinNeutral data.bodyPiglinNeutral/>
 
@@ -219,6 +223,8 @@ import net.minecraft.client.model.Model;
 
 		<@addSpecialInformation data.leggingsSpecialInformation, "item." + modid + "." + registryname + "_leggings"/>
 
+		<@hasGlow data.leggingsGlowCondition/>
+
 		<@piglinNeutral data.leggingsPiglinNeutral/>
 
 		<@onArmorTick data.onLeggingsTick/>
@@ -233,6 +239,8 @@ import net.minecraft.client.model.Model;
 		}
 
 		<@addSpecialInformation data.bootsSpecialInformation, "item." + modid + "." + registryname + "_boots"/>
+
+		<@hasGlow data.bootsGlowCondition/>
 
 		<@piglinNeutral data.bootsPiglinNeutral/>
 
